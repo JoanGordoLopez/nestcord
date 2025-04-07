@@ -18,6 +18,7 @@ import {
     Download,
 } from "lucide-react"
 import SidebarPost from "@/components/navigation/sidebar/sidebar-post"
+import SidebarMobile from "@/components/navigation/sidebar/sidebar-mobile"
 
 export default function Sidebar() {
     const isMobile = useIsMobile()
@@ -33,6 +34,10 @@ export default function Sidebar() {
     ]
 
     const pathname = usePathname()
+
+    if (isMobile) return (
+      <SidebarMobile />
+    )
 
     if (expanded)
         return (
