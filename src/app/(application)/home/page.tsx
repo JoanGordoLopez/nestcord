@@ -1,13 +1,16 @@
-import type { Metadata } from "next"
+import ApplicationFeed from "@/components/app/app-feed";
+import { createClient } from "@/database/client";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-    title: "Home | Nestcord",
-    description:
-        "Nestcord is a modern social platform to connect, chat, and share with friends—anytime, anywhere.",
-}
+export default async function Home() {
+  /** Custom Page Middleware to prevent unauthenticated users accessing pages */
+  const db = createClient();
+  const user = await db.auth.getUser();
+  if (!user) redirect("/");
 
-export default function Home() {
-    return (
-        <h1>Home</h1>
-    )
+  return (
+    <>
+      <ApplicationFeed />
+    </>
+  );
 }
