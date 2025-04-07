@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import { Analytics } from "@vercel/analytics/react"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./main.css"
 import { ThemeProvider } from "@/components/theme/theme-provider"
@@ -78,7 +79,11 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <ThemeProvider>{children}</ThemeProvider>
+                <ThemeProvider>
+                    {children}
+                </ThemeProvider>
+
+                <Analytics />
             </body>
         </html>
     )
