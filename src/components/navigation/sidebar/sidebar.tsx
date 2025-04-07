@@ -8,17 +8,16 @@ import { usePathname } from "next/navigation"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useUser } from "@/context/user-context"
 
-import { SidebarAccount } from "./sidebar-account"
+import { SidebarAccount } from "@/components/navigation/sidebar/sidebar-account"
 
 import {
     Home,
     Search,
     Bell,
     User,
-    MoreHorizontal,
     Download,
 } from "lucide-react"
-import SidebarPost from "./sidebar-post"
+import SidebarPost from "@/components/navigation/sidebar/sidebar-post"
 
 export default function Sidebar() {
     const isMobile = useIsMobile()
@@ -31,7 +30,6 @@ export default function Sidebar() {
         { icon: Bell, label: "Notifications", href: "/notifications" },
         { icon: Download, label: "Download", href: "/" },
         { icon: User, label: "Profile", href: `/${user?.username}` },
-        { icon: MoreHorizontal, label: "More options", href: "/settings" },
     ]
 
     const pathname = usePathname()
