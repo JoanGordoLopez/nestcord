@@ -1,6 +1,6 @@
-"use server";
+"use server"
 
-import { createClient } from "@/database/server";
+import { createClient } from "@/database/server"
 
 /**
  * Server function to update the view count of a status.
@@ -15,29 +15,29 @@ import { createClient } from "@/database/server";
  */
 
 export async function updateStatusViews(id: string, views: number) {
-  const db = await createClient();
+    const db = await createClient()
 
-  const viewsNumber = Number(views);
+    const viewsNumber = Number(views)
 
-  const { data } = await db
-    .from("status")
-    .update({
-      views: viewsNumber,
-    })
-    .eq("id", id)
-    .single();
-
-  if (!data) {
     const { data } = await db
-      .from("status_replies")
-      .update({
-        views: viewsNumber,
-      })
-      .eq("id", id)
-      .single();
+        .from("status")
+        .update({
+            views: viewsNumber,
+        })
+        .eq("id", id)
+        .single()
 
-    if (data) return true;
-  }
+    if (!data) {
+        const { data } = await db
+            .from("status_replies")
+            .update({
+                views: viewsNumber,
+            })
+            .eq("id", id)
+            .single()
 
-  if (data) return true;
+        if (data) return true
+    }
+
+    if (data) return true
 }
