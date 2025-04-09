@@ -30,6 +30,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog"
 import { mutate } from "swr"
+import { useRouter } from "next/navigation"
 
 export interface CardProps {
     id: string
@@ -66,6 +67,7 @@ export default function StatusCard({
 }: CardProps) {
     const { user } = useUser()
     const db = createClient()
+    const router = useRouter()
     const [hasLiked, setHasLiked] = useState(false)
     const [statusLikes, setStatusLikes] = useState(likes)
     const [isOpen, setIsOpen] = useState(false)
@@ -232,6 +234,27 @@ export default function StatusCard({
         channelId = (decimal1 + decimal2).toString()
     }
 
+    function renderContentWithMentions(content: string) {
+        const parts = content.split(/(@[a-zA-Z0-9_]+)/g)
+
+        return parts.map((part, index) => {
+            if (part.startsWith("@")) {
+                const username = part.slice(1)
+                return (
+                    <Link
+                        key={index}
+                        href={`/${username}`}
+                        className="text-indigo-500 hover:underline"
+                    >
+                        {part}
+                    </Link>
+                )
+            }
+
+            return <span key={index}>{part}</span>
+        })
+    }
+
     return (
         <div
             className="bg-white dark:bg-background px-4 py-3 hover:bg-slate-50 dark:hover:bg-gray-800/30 cursor-pointer transition-colors"
@@ -301,14 +324,19 @@ export default function StatusCard({
                     </div>
 
                     {/* Contenido del post */}
-                    <Link
-                        href={`${author.username}/status/${id}`}
-                        className="mt-2 block"
+                    <div
+                        onClick={() =>
+                            router.push(`/${author.username}/status/${id}`)
+                        }
+                        className="mt-2 block cursor-pointer"
                     >
-                        <div className="text-[15px] leading-normal break-all whitespace-pre-wrap">
-                            {content}
+                        <div
+                            className="text-[15px] leading-normal break-all whitespace-pre-wrap"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+                            {renderContentWithMentions(content)}
                         </div>
-                    </Link>
+                    </div>
 
                     {/* Imagen adjunta */}
                     {attachment && (
