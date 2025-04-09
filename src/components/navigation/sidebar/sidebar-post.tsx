@@ -189,7 +189,7 @@ export default function SidebarPost() {
                                                 <Textarea
                                                     {...field}
                                                     placeholder="What's happening now?"
-                                                    className=" w-full resize-none min-h-[120px] text-lg bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-2"
+                                                    className=" w-full resize-none min-h-[120px] text-lg bg-transparent border-1 focus-visible:ring-0 focus-visible:ring-offset-0 p-2"
                                                 />
                                             </FormControl>
                                             <FormMessage className="text-red-500" />
@@ -222,7 +222,7 @@ export default function SidebarPost() {
                             </div>
                         )}
                         <DialogDescription className="text-sm text-gray-500">
-                            This post will be visible as{" "}
+                            Visible to everyone as{" "}
                             <span className="font-bold">@{user?.username}</span>
                         </DialogDescription>
                         <Button className="bg-indigo-400 hover:bg-indigo-400 hover:cursor-not-allowed">
