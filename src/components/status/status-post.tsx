@@ -7,22 +7,25 @@ import { useState, useEffect, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { Image as ImageIcon, Gift, BarChart2, Smile } from "lucide-react"
-
+import { ImageIcon, Smile, X, MapPin, AtSign, EarthIcon } from "lucide-react"
 import { createPost } from "@/actions/create-post"
+import EmojiPicker, { type EmojiClickData } from "emoji-picker-react"
+import Image from "next/image"
+import imageCompression from "browser-image-compression"
 
 const MAX_CHARS = 250
 
 const FormSchema = z.object({
-    reply: z
+    post: z
         .string()
         .min(1, {
-            message: "Reply cannot be empty.",
+            message: "The post content cannot be empty.",
         })
         .max(MAX_CHARS, {
-            message: `Reply cannot be longer than ${MAX_CHARS} characters.`,
+            message: `The post content cannot be longer than ${MAX_CHARS} characters.`,
         }),
 })
 
@@ -30,32 +33,69 @@ export default function StatusPost() {
     const { user } = useUser()
     const [charCount, setCharCount] = useState(0)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const [displayEmojiTab, setDisplayEmojiTab] = useState(false)
+    const [attachment, setAttachment] = useState<File | null>(null)
+    const emojiButtonRef = useRef<HTMLButtonElement>(null)
+
+    const [loading, setLoading] = useState<boolean>(false)
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            reply: "",
+            post: "",
         },
     })
 
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         const formData = new FormData()
-        formData.append("content", data.reply)
+        formData.append("content", data.post)
 
-        const success = await createPost(formData, null, user)
-
-        if (success) {
-            form.reset()
+        setLoading(true)
+        try {
+            const success = await createPost(formData, attachment, user)
+            if (success) {
+                form.reset()
+                setAttachment(null)
+                setDisplayEmojiTab(false)
+                setCharCount(0)
+            }
+        } catch (error) {
+            console.error("Error creating post:", error)
+        } finally {
+            setLoading(false)
         }
     }
 
+    // Handle emoji selection
+    const handleEmojiInput = (emoji: EmojiClickData) => {
+        const emojiText = String.fromCodePoint(
+            Number.parseInt(emoji.unified, 16)
+        )
+
+        const content = form.getValues("post") as string
+        form.setValue("post", content + emojiText)
+    }
+
+    // Close emoji picker when clicking outside
     useEffect(() => {
-        const textarea = textareaRef.current
-        if (textarea) {
-            textarea.style.height = "auto"
-            textarea.style.height = `${textarea.scrollHeight}px`
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                displayEmojiTab &&
+                emojiButtonRef.current &&
+                !emojiButtonRef.current.contains(event.target as Node) &&
+                !document
+                    .querySelector(".EmojiPickerReact")
+                    ?.contains(event.target as Node)
+            ) {
+                setDisplayEmojiTab(false)
+            }
         }
-    }, [form.watch("reply")])
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [displayEmojiTab])
 
     return (
         <Card className="w-full max-w-2xl border-0 shadow-none">
@@ -79,7 +119,7 @@ export default function StatusPost() {
                             <div className="flex-1 space-y-4">
                                 <FormField
                                     control={form.control}
-                                    name="reply"
+                                    name="post"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
@@ -101,31 +141,125 @@ export default function StatusPost() {
                                         </FormItem>
                                     )}
                                 />
+
+                                <div className="flex items-center gap-1 text-indigo-400 text-sm">
+                                    <EarthIcon className="w-4 h-4" />
+                                    <span>
+                                        Visible to everyone as{" "}
+                                        <span className="font-bold">
+                                            @{user?.username}
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <Separator className="bg-gray-200 dark:bg-gray-800 md:orientation-vertical md:h-auto md:w-px" />
+
+                                {attachment && (
+                                    <div className="relative mt-4 rounded-2xl overflow-hidden">
+                                        <Image
+                                            src={
+                                                URL.createObjectURL(
+                                                    attachment
+                                                ) || "/placeholder.svg"
+                                            }
+                                            alt="Attached image"
+                                            className="max-w-full h-auto rounded-2xl object-cover"
+                                            width={500}
+                                            height={300}
+                                        />
+                                        <Button
+                                            variant="secondary"
+                                            size="icon"
+                                            className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full"
+                                            onClick={() => setAttachment(null)}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                )}
+
                                 <div className="flex items-center justify-between">
                                     <div className="flex gap-2 text-indigo-500">
                                         <Button
+                                            type="button"
                                             variant="ghost"
-                                            className="rounded-full p-2 hover:bg-indigo-50"
+                                            className="rounded-full text-indigo-500 hover:bg-sky-500/10 hover:text-indigo-600"
+                                            size="icon"
+                                            onClick={() => {
+                                                document
+                                                    .getElementById(
+                                                        "file-upload"
+                                                    )
+                                                    ?.click()
+                                                setDisplayEmojiTab(false)
+                                            }}
                                         >
                                             <ImageIcon className="h-5 w-5" />
                                         </Button>
+                                        <input
+                                            id="file-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0]
+                                                if (file) {
+                                                    const options = {
+                                                        maxSizeMb: 30,
+                                                        maxWidthOrHeight: 900,
+                                                        useWebWorker: true,
+                                                    }
+
+                                                    try {
+                                                        const compressedFile =
+                                                            await imageCompression(
+                                                                file,
+                                                                options
+                                                            )
+                                                        setAttachment(
+                                                            compressedFile
+                                                        )
+                                                    } catch (error) {
+                                                        console.error(
+                                                            "Error compressing image:",
+                                                            error
+                                                        )
+                                                    }
+                                                }
+                                            }}
+                                        />
                                         <Button
+                                            type="button"
+                                            ref={emojiButtonRef}
                                             variant="ghost"
-                                            className="rounded-full p-2 hover:bg-indigo-50"
-                                        >
-                                            <Gift className="h-5 w-5" />
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            className="rounded-full p-2 hover:bg-indigo-50"
-                                        >
-                                            <BarChart2 className="h-5 w-5" />
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            className="rounded-full p-2 hover:bg-indigo-50"
+                                            className={
+                                                "rounded-full p-2 text-indigo-500 hover:bg-sky-500/10 hover:text-indigo-600"
+                                            }
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                setDisplayEmojiTab(
+                                                    (prev) => !prev
+                                                )
+                                            }}
                                         >
                                             <Smile className="h-5 w-5" />
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="rounded-full text-indigo-500 hover:bg-sky-500/10 hover:text-indigo-600 hover:cursor-not-allowed"
+                                        >
+                                            <MapPin className="h-5 w-5" />
+                                        </Button>
+
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="rounded-full text-indigo-500 hover:bg-sky-500/10 hover:text-indigo-600 hover:cursor-not-allowed"
+                                        >
+                                            <AtSign className="h-5 w-5" />
                                         </Button>
                                     </div>
 
@@ -144,10 +278,20 @@ export default function StatusPost() {
                                                 charCount > MAX_CHARS
                                             }
                                         >
-                                            Post
+                                            Post {loading && "Posting"}
                                         </Button>
                                     </div>
                                 </div>
+
+                                {displayEmojiTab && (
+                                    <div className="absolute z-50 mt-2">
+                                        <EmojiPicker
+                                            width={300}
+                                            height={350}
+                                            onEmojiClick={handleEmojiInput}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </form>
