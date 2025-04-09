@@ -58,7 +58,7 @@ export default function ApplicationFeed() {
         >
             <div className="sticky top-0 z-10 bg-white dark:bg-background backdrop-blur">
                 <div className="flex items-center justify-between px-4 py-3">
-                    <h1 className="text-xl font-bold">Home</h1>
+                    <h1 className="text-xl font-bold">Feed</h1>
                     {!isLoading && (
                         <Button
                             onClick={refreshFeed}
@@ -81,7 +81,7 @@ export default function ApplicationFeed() {
                             value="home"
                             className="rounded-none border-0 data-[state=active]:border-b-2 data-[state=active]:border-indigo-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
                         >
-                            Home
+                            For you
                         </TabsTrigger>
                         <TabsTrigger
                             value="following"
