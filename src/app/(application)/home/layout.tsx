@@ -55,8 +55,6 @@ export const metadata: Metadata = {
             noimageindex: false,
         },
     },
-
-    manifest: "/manifest.json",
 }
 
 export const viewport: Viewport = {
@@ -66,6 +64,7 @@ export const viewport: Viewport = {
     userScalable: false,
 }
 
+export const dynamic = "force-dynamic"
 const AppLayout = (props: AppLayoutProps) => {
     return (
         <>
