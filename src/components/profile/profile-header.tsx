@@ -1,19 +1,30 @@
 "use client"
+import Link from "next/link"
 import { useUser } from "@/context/user-context"
 import { createClient } from "@/database/client"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import {
     ArrowLeft,
     Calendar,
+    Flag,
     LinkIcon,
+    ListPlus,
     MapPin,
     MoreHorizontal,
+    Share,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/profile/profile-avatar"
 import dayjs from "dayjs"
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu"
 
 interface ProfileHeaderProps {
     id: string
@@ -47,8 +58,8 @@ export function ProfileHeader({
     const { user } = useUser()
     const router = useRouter()
     const [isFollowingState, setIsFollowingState] = useState(isFollowing)
-    const [isLoading, setIsLoading] = useState(false)
     const [followersCount, setFollowersCount] = useState(followers)
+    const [isLoading, setIsLoading] = useState(false)
     const db = createClient()
     useEffect(() => {
         if (!id || !user?.id) return
@@ -129,6 +140,28 @@ export function ProfileHeader({
         router.push("/settings/profile/")
     }
 
+    const handleFollowersRoute = () => {
+        router.push(`/${username}/followers`)
+    }
+
+    const handleShare = useCallback(() => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Share Link',
+                text: 'Share this profile link with your friends!',
+                url: username,
+            })
+            .then(() => console.log('[LOG]: Share API Link was successful'))
+            .catch((error) => console.error('Error sharing link:', error));
+        } else {
+            console.log('[Error]: Share API is not supported in this browser');
+        }
+    }, [username]);
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(username);
+    }
+
     return (
         <div className="relative">
             {/* Header with back button */}
@@ -167,12 +200,54 @@ export function ProfileHeader({
                 {/* Action buttons */}
                 <div className="flex justify-end mt-3 mb-4">
                     <div className="flex gap-2">
-                        <Button
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button
                             variant="outline"
                             size="icon"
                             className="rounded-full border border-gray-300 dark:border-gray-700"
                         >
                             <MoreHorizontal className="h-5 w-5" />
+                        </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent>
+
+                            <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-800 py-3 px-4 text-black dark:text-white"
+                    onClick={handleFollowersRoute}>
+                        <ListPlus className="w-5 h-5 mr-3 text-black dark:text-white" />
+                        <span>View Followers</span>
+                    </DropdownMenuItem>
+
+                            <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-800 py-3 px-4 text-black dark:text-white"
+                            onClick={handleShare}>
+                        <Share className="w-5 h-5 mr-3 text-black dark:text-white" />
+                        <span>Share Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-800 py-3 px-4 text-black dark:text-white"
+                    onClick={handleCopyLink}>
+                        <LinkIcon className="w-5 h-5 mr-3 text-black dark:text-white" />
+                        <span>Profile Link</span>
+                    </DropdownMenuItem>
+
+                    {/** If the username is not the same as the actual user show content */}
+                    {user?.username !== username && (
+                                            <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-800 py-3 px-4 text-black dark:text-white"
+                                            onClick={handleCopyLink}>
+                                                <Flag className="w-5 h-5 mr-3 text-black dark:text-white" />
+                                                <span>Report @{username}</span>
+                                            </DropdownMenuItem>
+                    )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="rounded-full border border-gray-300 dark:border-gray-700"
+                            onClick={handleShare}
+                        >
+                            <Share className="h-5 w-5" />
                         </Button>
 
                         {isCurrentUser ? (
@@ -236,7 +311,7 @@ export function ProfileHeader({
                                     }
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-sky-500 hover:underline"
+                                    className="text-indigo-500 hover:underline"
                                 >
                                     {website.replace(/^https?:\/\//, "")}
                                 </a>
@@ -250,13 +325,18 @@ export function ProfileHeader({
                     </div>
 
                     <div className="flex gap-4 mt-3 text-sm">
-                        <button className="hover:underline">
-                            <span className="font-bold">{following}</span>{" "}
-                            <span className="text-gray-500">Following</span>
-                        </button>
-                        <button className="hover:underline">
+                    <button className="hover:underline">
+                            <Link href={`/${username}/followers`}>
                             <span className="font-bold">{followersCount}</span>{" "}
                             <span className="text-gray-500">Followers</span>
+                            </Link>
+                        </button>
+                        
+                        <button className="hover:underline">
+                            <Link href={`/${username}/following`}>
+                            <span className="font-bold">{following}</span>{" "}
+                            <span className="text-gray-500">Following</span>
+                            </Link>
                         </button>
                     </div>
                 </div>

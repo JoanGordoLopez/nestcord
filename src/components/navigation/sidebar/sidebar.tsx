@@ -42,7 +42,7 @@ export default function Sidebar() {
     if (expanded)
         return (
             <div
-                className={`sticky top-0 h-screen ${isMobile ? "w-[70px]" : expanded ? "w-[275px]" : "w-[88px]"} flex-shrink-0 py-2 pr-2 border-r`}
+                className={`sticky top-0 h-screen ${isMobile ? "w-[70px]" : expanded ? "w-[275px]" : "w-[88px]"} flex-shrink-0 py-2 pr-2`}
             >
                 <div className="flex h-full flex-col justify-between">
                     <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function Sidebar() {
                                         }`}
                                     >
                                         <item.icon
-                                            className={`h-7 w-7 ${isActive ? "font-bold text-black dark:text-white" : ""}`}
+                                            className={`h-7 w-7 ${isActive ? "t-bold text-black dark:text-white" : ""}`}
                                         />
                                         {expanded && !isMobile && (
                                             <span className="text-xl">

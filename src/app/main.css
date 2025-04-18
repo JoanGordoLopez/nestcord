@@ -103,3 +103,27 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Styling for mentions */
+.mentions__mention {
+    color: #6366f1;
+    font-weight: 500;
+    background-color: rgba(99, 102, 241, 0.1);
+    border-radius: 0.25rem;
+    padding: 0 0.25rem;
+    cursor: pointer;
+  }
+  
+  /* Ensure the mentions input has proper styling */
+  .mentions-input {
+    width: 100%;
+    min-height: 80px;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    transition: border-color 0.2s;
+  }
+  
+  .mentions-input:focus-within {
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+  
