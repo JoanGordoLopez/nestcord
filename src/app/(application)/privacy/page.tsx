@@ -196,7 +196,7 @@ export default function PrivacyPolicy() {
           <Link href="/terms" className="hover:underline">
             Terms of Service
           </Link>
-          <Link href="/policy" className="hover:underline">
+          <Link href="/privacy" className="hover:underline">
             Privacy Policy
           </Link>
           <span>© 2024 Nestcord.</span>

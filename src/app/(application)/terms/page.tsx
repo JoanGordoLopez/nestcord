@@ -398,7 +398,7 @@ export default function TermsOfService() {
           <Link href="/terms" className="hover:underline">
             Terms of Service
           </Link>
-          <Link href="/policy" className="hover:underline">
+          <Link href="/privacy" className="hover:underline">
             Privacy Policy
           </Link>
           <span>© 2025 Nestcord.</span>
