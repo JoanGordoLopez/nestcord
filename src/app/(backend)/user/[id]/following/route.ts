@@ -1,12 +1,22 @@
 import { createClient } from "@/database/server"
 import { NextRequest, NextResponse } from "next/server"
 
+/**
+ * Handles a GET request to retrieve the latest 10 follow relationships initiated by a specific user.
+ *
+ * @param request - The incoming HTTP request object from Next.js.
+ * @param params - An object containing route parameters, expected to include a user ID.
+ * 
+ * @returns A JSON response containing the list of followed users and the count, or an error message.
+ */
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    // Await the parameters and extract the user ID
     const { id } = await params
 
+    // Return a 400 Bad Request response if no user ID is provided
     if (!id) {
         return NextResponse.json(
             { error: "No User ID was provided" },
@@ -14,15 +24,18 @@ export async function GET(
         )
     }
 
+    // Initialize the database client
     const db = await createClient()
 
+    // Query the 'follows' table for the latest 10 follow relationships where the user is the follower
     const { data, error } = await db
-    .from("follows")
-    .select("id, follower(id, name, username, avatar), author(id, name, username, avatar, biography), created_at")
-    .eq("follower", id)
-    .order("created_at", { ascending: false })
-    .limit(10)
+        .from("follows")
+        .select("id, follower(id, name, username, avatar), author(id, name, username, avatar, biography), created_at")
+        .eq("follower", id)
+        .order("created_at", { ascending: false })
+        .limit(10)
 
+    // Return a 500 Internal Server Error response if the query fails
     if (error) {
         return NextResponse.json(
             { error: "Error fetching user followers" },
@@ -30,8 +43,10 @@ export async function GET(
         )
     }
 
+    // Calculate the number of follow relationships found
     const count = data?.length
 
+    // Return the follow data and count in a 200 OK response
     return NextResponse.json({
         data, count
     })
