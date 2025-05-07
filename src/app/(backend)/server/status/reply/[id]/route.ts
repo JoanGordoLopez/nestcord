@@ -13,7 +13,7 @@ export async function POST(
     { params }: { params: { id: string } }
 ) {
     const db = await createClient()
-    const id = (await params).id
+    const { id } = await params  // Directly destructure `id` from params.
 
     const { data } = await db.from("status").select("id").eq("id", id).single()
 
@@ -59,7 +59,7 @@ export async function GET(
     { params }: { params: { id: string } }
 ) {
     const db = await createClient()
-    const id = (await params).id
+    const { id } = await params  // Directly destructure `id` from params.
 
     const { data } = await db.from("status").select("id").eq("id", id).single()
 
