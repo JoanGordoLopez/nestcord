@@ -37,7 +37,7 @@ export default function StatusReply({ author, id }: StatusType) {
     const [charCount, setCharCount] = useState(0)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-    const { mutate } = useSWR(`/api/status/reply/${id}`, fetcher)
+    const { mutate } = useSWR(`/api/status/reply?id=${id}`, fetcher)
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -47,7 +47,7 @@ export default function StatusReply({ author, id }: StatusType) {
     })
 
     const postReply = async (id: string, content: string) => {
-        const res = await fetch(`/api/status/reply/${id}`, {
+        const res = await fetch(`/api/status/reply?id=${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
