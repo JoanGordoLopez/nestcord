@@ -18,7 +18,6 @@ import {
     MoreHorizontal,
     LogOut,
     User,
-    Settings,
     Palette,
     Loader2,
 } from "lucide-react"
@@ -93,13 +92,6 @@ export function SidebarAccount() {
                     <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-800 py-3 px-4 text-black dark:text-white">
                         <User className="w-5 h-5 mr-3 text-black dark:text-white" />
                         <span>Profile</span>
-                    </DropdownMenuItem>
-                </Link>
-
-                <Link href="/settings" className="block">
-                    <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-800 py-3 px-4 text-black dark:text-white">
-                        <Settings className="w-5 h-5 mr-3 text-black dark:text-white" />
-                        <span>Settings</span>
                     </DropdownMenuItem>
                 </Link>
 
