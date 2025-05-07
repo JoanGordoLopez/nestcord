@@ -1,4 +1,5 @@
 import ApplicationFeed from "@/components/app/app-feed"
+import { ChatContainer } from "@/components/messages/chat-container"
 import { createClient } from "@/database/server"
 import { redirect } from "next/navigation"
 
@@ -12,6 +13,8 @@ export default async function Home() {
     return (
         <>
             <ApplicationFeed />
+
+            <ChatContainer />
         </>
     )
 }

@@ -4,6 +4,7 @@ import Sidebar from "@/components/navigation/sidebar/sidebar"
 import { Aside } from "@/components/navigation/aside/aside"
 
 import { Statuscomment } from "@/components/app/comment-feed"
+import { ChatContainer } from "@/components/messages/chat-container"
 
 export default async function Status({
     params,
@@ -19,6 +20,7 @@ export default async function Status({
                     <Sidebar />
                     <Statuscomment id={status.id} />
                     <Aside />
+                    <ChatContainer />
                 </div>
             </main>
         )

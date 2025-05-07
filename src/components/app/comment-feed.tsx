@@ -83,7 +83,7 @@ export function Statuscomment({ id }: { id: string }) {
                     <React.Fragment key={status.id}>
                         <StatusCard {...status} />
 
-                        <div className="border-b">
+                        <div className="border-t border-b">
                             <StatusReply {...status} />
                         </div>
                     </React.Fragment>

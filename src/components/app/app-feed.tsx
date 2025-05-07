@@ -53,7 +53,7 @@ export default function ApplicationFeed() {
 
     return (
         <section
-            className={`border-x ${isMobile ? "flex-1" : "w-[600px]"}`}
+            className={`border-x ${isMobile ? "border-x flex-1" : "w-[600px]"}`}
             id="feed"
         >
             <div className="sticky top-0 z-10 bg-white dark:bg-background backdrop-blur">

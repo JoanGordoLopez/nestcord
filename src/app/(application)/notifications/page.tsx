@@ -1,3 +1,4 @@
+import { ChatContainer } from "@/components/messages/chat-container";
 import { NotificationsContent } from "@/components/notifications/notifications-content";
 
 export default function Notifications() {
@@ -5,6 +6,7 @@ export default function Notifications() {
         <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white">
             <div className="mx-auto flex max-w-7xl">
                 <NotificationsContent />
+                <ChatContainer />
             </div>   
         </div>
 

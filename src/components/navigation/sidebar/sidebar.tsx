@@ -43,6 +43,7 @@ export default function Sidebar() {
         return (
             <div
                 className={`sticky top-0 h-screen ${isMobile ? "w-[70px]" : expanded ? "w-[275px]" : "w-[88px]"} flex-shrink-0 py-2 pr-2`}
+                style={{ zIndex: 10 }}
             >
                 <div className="flex h-full flex-col justify-between">
                     <div className="space-y-2">
