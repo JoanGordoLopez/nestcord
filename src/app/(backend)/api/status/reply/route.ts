@@ -8,12 +8,22 @@ import { NextResponse } from "next/server"
  * @param params - The parameters object, which contains the status ID in the URL.
  * @returns A JSON response confirming the creation of the reply, or an error message.
  */
-export async function POST(
-    req: Request,
-    { params }: { params: { id: string } }
-) {
+export async function POST(req: Request) {
+    // Parse the query parameters to get the status ID
+    const url = new URL(req.url)
+    const id = url.searchParams.get('id')
+
+    if (!id) {
+        return NextResponse.json(
+            {
+                error: "Missing Status ID",
+                message: "The status ID is required.",
+            },
+            { status: 400 }
+        )
+    }
+
     const db = await createClient()
-    const { id } = await params  // Directly destructure `id` from params.
 
     const { data } = await db.from("status").select("id").eq("id", id).single()
 
@@ -54,12 +64,22 @@ export async function POST(
 /**
  * Handles a GET request to retrieve replies for a specific status.
  */
-export async function GET(
-    req: Request,
-    { params }: { params: { id: string } }
-) {
+export async function GET(req: Request) {
+    // Parse the query parameters to get the status ID
+    const url = new URL(req.url)
+    const id = url.searchParams.get('id')
+
+    if (!id) {
+        return NextResponse.json(
+            {
+                error: "Missing Status ID",
+                message: "The status ID is required.",
+            },
+            { status: 400 }
+        )
+    }
+
     const db = await createClient()
-    const { id } = await params  // Directly destructure `id` from params.
 
     const { data } = await db.from("status").select("id").eq("id", id).single()
 

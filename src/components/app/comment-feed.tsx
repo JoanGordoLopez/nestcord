@@ -24,7 +24,7 @@ export function Statuscomment({ id }: { id: string }) {
     const isMobile = useIsMobile()
 
     const { data: statusReplies, isLoading: isLoadingStatus } = useSWR(
-        `/server/status/reply/${id}`,
+        `/api/status/reply?id=${id}`,
         fetcher
     )
 
