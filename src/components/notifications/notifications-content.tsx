@@ -44,22 +44,29 @@ export function NotificationsContent() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="all" className="mt-0 p-0 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="all" className="mt-0 p-0 focus-visible:outline-none focus-visible:ring-0 flex flex-col items-center justify-center h-full">
             <div className="text-3xl font-bold">
-                <h1>Not implemented yet</h1>
+              <h1>Not implemented 
+                <br /> &mdash; yet</h1>
             </div>
+            <p className="text-gray-400 mt-2 text-lg">This section is not available yet.</p>
           </TabsContent>
 
-          <TabsContent value="mentions" className="mt-0 p-0 focus-visible:outline-none focus-visible:ring-0">
-          <div className="text-3xl font-bold">
-                <h1>Not implemented yet</h1>
+
+          <TabsContent value="mentions" className="mt-0 p-0 focus-visible:outline-none focus-visible:ring-0 flex flex-col items-center justify-center h-full">
+            <div className="text-3xl font-bold">
+              <h1>Not implemented 
+                <br /> &mdash; yet</h1>
             </div>
+            <p className="text-gray-400 mt-2 text-lg">This section is not available yet.</p>
           </TabsContent>
 
-          <TabsContent value="verified" className="mt-0 p-0 focus-visible:outline-none focus-visible:ring-0">
-          <div className="text-3xl font-bold">
-                <h1>Not implemented yet</h1>
+          <TabsContent value="verified" className="mt-0 p-0 focus-visible:outline-none focus-visible:ring-0 flex flex-col items-center justify-center h-full">
+            <div className="text-3xl font-bold">
+              <h1>Not implemented 
+                <br /> &mdash; yet</h1>
             </div>
+            <p className="text-gray-400 mt-2 text-lg">This section is not available yet.</p>
           </TabsContent>
         </Tabs>
       </div>
