@@ -136,10 +136,6 @@ export function ProfileHeader({
         }
     }
 
-    const handleEditProfile = () => {
-        router.push("/settings/profile/")
-    }
-
     const handleFollowersRoute = () => {
         router.push(`/${username}/followers`)
     }
@@ -253,7 +249,6 @@ export function ProfileHeader({
                         {isCurrentUser ? (
                             <Button
                                 variant="outline"
-                                onClick={handleEditProfile}
                                 className="rounded-full border border-gray-300 dark:border-gray-700 font-bold"
                             >
                                 Edit Profile

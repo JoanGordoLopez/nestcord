@@ -30,7 +30,7 @@ export function SidebarAccount() {
     const router = useRouter()
 
     const handleSession = async () => {
-        const db = createClient()
+        const db = await createClient()
         try {
             await db.auth.signOut()
         } finally {

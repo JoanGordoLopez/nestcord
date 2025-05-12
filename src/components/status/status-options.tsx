@@ -85,7 +85,7 @@ export default function StatusOptions({
                     </DropdownMenuItem>
                 </Link>
 
-                <Link href={`/status/${id}/analytics`}>
+                <Link href={`${username}/status/${id}/analytics`}>
                     <DropdownMenuItem className="hover:cursor-pointer">
                         <ChartNoAxesColumn className="w-4 h-4" />
                         <span>View post analytics</span>

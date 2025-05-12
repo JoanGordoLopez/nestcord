@@ -269,17 +269,31 @@ export default function StatusPost() {
                                         >
                                             {charCount}/{MAX_CHARS}
                                         </span>
-                                        <Button
-                                            type="submit"
-                                            className="rounded-full px-4 bg-indigo-500 hover:bg-indigo-600 text-white"
-                                            variant="secondary"
-                                            disabled={
-                                                charCount === 0 ||
-                                                charCount > MAX_CHARS
-                                            }
-                                        >
-                                            Post {loading && "Posting"}
-                                        </Button>
+                                        {loading ? (
+                                            <Button
+                                                type="submit"
+                                                className="rounded-full px-4 bg-gray-500 text-white"
+                                                variant="secondary"
+                                                disabled={
+                                                    charCount === 0 ||
+                                                    charCount > MAX_CHARS
+                                                }
+                                            >
+                                                Posting...
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                type="submit"
+                                                className="rounded-full px-4 bg-indigo-500 hover:bg-indigo-600 text-white"
+                                                variant="secondary"
+                                                disabled={
+                                                    charCount === 0 ||
+                                                    charCount > MAX_CHARS
+                                                }
+                                            >
+                                                Post
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
 

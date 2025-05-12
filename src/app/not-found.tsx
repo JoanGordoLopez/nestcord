@@ -7,11 +7,13 @@ import Sidebar from "@/components/navigation/sidebar/sidebar"
 import { Aside } from "@/components/navigation/aside/aside"
 
 import { Button } from "@/components/ui/button"
+import { UserContextProvider } from "@/context/user-context"
 
 export default function NotFound() {
     const pathname = usePathname()
 
     return (
+        <UserContextProvider>
         <div className="min-h-screen bg-background text-black dark:text-white">
             <div className="mx-auto flex max-w-7xl">
                 <Sidebar />
@@ -45,5 +47,6 @@ export default function NotFound() {
                 <Aside />
             </div>
         </div>
+        </UserContextProvider>
     )
 }
